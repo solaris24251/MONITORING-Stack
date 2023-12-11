@@ -3,7 +3,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: sample-app-staging
-  namespace: staging
+  namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -11,7 +11,7 @@ spec:
   source:
     repoURL: https://github.com/solaris24251/MONITORING-Stack
     targetRevision: ver1
-    path: Full/apps/helm-promotion-sample-app/charts
+    path: Full/apps/helm-promotion-sample-app/chart
     helm:                                                                                                                                                                                                                                                                                 
       valueFiles:                                                                                                                                                                                                                                                                         
       - values-staging.yaml
