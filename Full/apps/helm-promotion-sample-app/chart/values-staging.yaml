@@ -25,7 +25,7 @@ appMode: staging
 certificatePath: /etc/ssl/staging
 paypalURLLocation: https://staging.paypal.example.com
 databaseUser: staging-user
-databasePassword: staging-password
+databasePassword: staging-password8899
 
 
 
