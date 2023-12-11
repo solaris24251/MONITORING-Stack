@@ -12,8 +12,9 @@ spec:
     repoURL: https://github.com/solaris24251/MONITORING-Stack
     targetRevision: ver1
     path: Full/apps/helm-promotion-sample-app/charts
-  custom_value_files:
-      - ./chart/values-staging.yaml
+    helm:                                                                                                                                                                                                                                                                                 
+      valueFiles:                                                                                                                                                                                                                                                                         
+      - values-staging.yaml
   destination:
     server: https://kubernetes.default.svc
   syncPolicy:
