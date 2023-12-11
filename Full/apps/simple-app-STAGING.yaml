@@ -2,8 +2,8 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: apps-staging
-  namespace: argocd
+  name: sample-app-staging
+  namespace: staging
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -11,7 +11,9 @@ spec:
   source:
     repoURL: https://github.com/solaris24251/MONITORING-Stack
     targetRevision: ver1
-    path: Full/infra/charts/opentelemetry-operator
+    path: Full/apps/helm-promotion-sample-app/charts
+  custom_value_files:
+      - ./chart/values-staging.yaml
   destination:
     server: https://kubernetes.default.svc
   syncPolicy:
@@ -21,6 +23,6 @@ spec:
       allowEmpty: false
     syncOptions:
       - Validate=true
-      - CreateNamespace=false
+      - CreateNamespace=true
       - PrunePropagationPolicy=foreground
       - PruneLast=true
