@@ -19,6 +19,10 @@ service:
   type: LoadBalancer
   port: 8899
 
+ingress:
+  enabled: true
+  ingressClass: traefik
+  path: /sample-app
 
 ## Application level settings  
 appMode: staging

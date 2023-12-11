@@ -1,0 +1,139 @@
+---
+# Source: sample-app/templates/settings-cm.yml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: application-settings
+  namespace: staging
+data:
+  settings.ini: |
+    # possible values : production, development, staging, qa
+    app_mode = staging
+
+    [security]
+    # Path to SSL certificates
+    certificates = /etc/ssl/staging
+
+    [paypal]
+    paypal_url = https://staging.paypal.example.com
+
+    [mysql]
+    db_user = staging-user
+    db_password = staging-password8899
+---
+# Source: sample-app/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: sample-app
+  namespace: staging
+  labels:
+    helm.sh/chart: sample-app-0.1.0
+    app.kubernetes.io/name: sample-app
+    app.kubernetes.io/instance: sample-app
+    app.kubernetes.io/version: "1.0.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 8899
+      targetPort: http
+      protocol: TCP
+    
+      name: http
+  selector:
+    app.kubernetes.io/name: sample-app
+    app.kubernetes.io/instance: sample-app
+---
+# Source: sample-app/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sample-app
+  namespace: staging
+  labels:
+    helm.sh/chart: sample-app-0.1.0
+    app.kubernetes.io/name: sample-app
+    app.kubernetes.io/instance: sample-app
+    app.kubernetes.io/version: "1.0.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: sample-app
+      app.kubernetes.io/instance: sample-app
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: sample-app
+        app.kubernetes.io/instance: sample-app
+    spec:
+
+      containers:
+        - name: sample-app
+          securityContext:
+            null
+          image: "kostiscodefresh/helm-promotion-app:latest"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          volumeMounts:
+          - name: config-volume
+            mountPath: /config    
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+      volumes:
+        - name: config-volume
+          configMap:
+            name: application-settings
+---
+# Source: sample-app/templates/ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sample-app-ingress
+  namespace: staging
+  annotations:
+    kubernetes.io/ingress.class: traefik
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /sample-app
+            pathType: Prefix
+            backend:
+              service:
+                name: sample-app
+                port:
+                  number: 8899
+---
+# Source: sample-app/templates/tests/test-connection.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "sample-app-test-connection"
+  namespace: staging
+  labels:
+    helm.sh/chart: sample-app-0.1.0
+    app.kubernetes.io/name: sample-app
+    app.kubernetes.io/instance: sample-app
+    app.kubernetes.io/version: "1.0.0"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args: ['sample-app:8899']
+  restartPolicy: Never
