@@ -11,7 +11,7 @@ spec:
   source:
     repoURL: https://github.com/solaris24251/MONITORING-Stack
     targetRevision: ver1
-    path: Full/apps/demoapp/chart
+    path: Full/apps/demoapp/charts
     helm:                                                                                                                                                                                                                                                                                 
       valueFiles:                                                                                                                                                                                                                                                                         
       - ./values.yaml
