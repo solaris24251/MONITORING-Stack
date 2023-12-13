@@ -48,7 +48,7 @@ service:
 ingress:
   enabled: true
   ingressClass: traefik
-  path: /demoapp(/|$)(.*)
+  path: /demoapp/*
 
 
 resources: {}
