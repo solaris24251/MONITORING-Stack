@@ -15,7 +15,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: {{ include "sample-app.fullname" . }}
+                name: {{ include "demoapp.fullname" . }}
                 port:
                   number: {{ .Values.service.port }}
 {{- end }}
