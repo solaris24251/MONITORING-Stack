@@ -14,7 +14,7 @@ spec:
     path: Full/apps/demoapp/charts
     helm:                                                                                                                                                                                                                                                                                 
       valueFiles:                                                                                                                                                                                                                                                                         
-      - ./values.yaml
+      - values.yaml
   destination:
     server: https://kubernetes.default.svc
   syncPolicy:
