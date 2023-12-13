@@ -15,4 +15,3 @@ spec:
       name: http
   selector:
     {{- include "sample-app.selectorLabels" . | nindent 4 }}
-    app.kubernetes.io/name: prometheus-operator
