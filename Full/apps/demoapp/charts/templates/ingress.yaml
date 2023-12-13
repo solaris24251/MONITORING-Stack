@@ -1,11 +1,22 @@
 
 {{- if .Values.ingress.enabled }}
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: strip-prefix
+  namespace: {{ .Values.Namespace }}
+spec:
+  stripPrefixRegex:
+    regex:
+    - ^/[^/]+
+---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ .Release.Name }}-ingress
   namespace: {{ .Values.Namespace }}
   annotations:
+    traefik.ingress.kubernetes.io/router.middlewares: {{ .Values.Namespace }}-strip-prefix@kubernetescrd
 #   nginx.ingress.kubernetes.io/rewrite-target: /$2
     traefik.ingress.kubernetes.io/prefix-rewrite: /
     kubernetes.io/ingress.class: {{ .Values.ingress.ingressClass }}
