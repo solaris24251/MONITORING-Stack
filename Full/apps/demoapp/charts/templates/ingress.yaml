@@ -16,6 +16,7 @@ metadata:
   name: {{ .Release.Name }}-ingress
   namespace: {{ .Values.Namespace }}
   annotations:
+    traefik.ingress.kubernetes.io/router.middlewares: {{ .Values.Namespace }}-strip-prefix@kubernetescrd
     kubernetes.io/ingress.class: {{ .Values.ingress.ingressClass }}
 spec:
   rules:
