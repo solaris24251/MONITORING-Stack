@@ -6,11 +6,14 @@ metadata:
     {{- include "sample-app.labels" . | nindent 4 }}
     team: devops-by-example
   name: {{ include "sample-app.fullname" . }}
-  namespace: staging
+  namespace: monitoring
 spec:
   endpoints:
   - honorLabels: true
     port: http
+  namespaceSelector:
+    matchNames:
+    - staging
   selector:
     matchLabels:
       app.kubernetes.io/name: sample-app
