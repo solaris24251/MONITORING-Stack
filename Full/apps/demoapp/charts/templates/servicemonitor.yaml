@@ -1,0 +1,19 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    {{- include "demoapp.labels" . | nindent 4 }}
+    team: devops-by-example
+  name: {{ include "demoapp.fullname" . }}
+  namespace: monitoring
+spec:
+  endpoints:
+  - honorLabels: true
+    port: http
+  namespaceSelector:
+    matchNames:
+    - staging
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: demoapp
