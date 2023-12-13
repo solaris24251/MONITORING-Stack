@@ -1,6 +1,15 @@
 
 {{- if .Values.ingress.enabled }}
-
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: strip-prefix
+  namespace: {{ .Values.Namespace }}
+spec:
+  stripPrefixRegex:
+    regex:
+    - ^/[^/]+
+---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
